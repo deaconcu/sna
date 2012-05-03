@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.jike.mobile.sna.model.AppUserGroup" table="app_user_group" catalog="sna">
+		<id name="id" type="integer">
+			<column name="id" />
+			<generator class="native"></generator>
+		</id>
+		<property name="createTime" type="long">
+            <column name="createTime" not-null="true"></column>
+		</property>
+		
+		<property name="containString" type="string">
+            <column name="containString" not-null="true"></column>
+        </property>
+
+		<set name="contains" table="app_user_group_contain">
+			<key column="groupId" />
+			<many-to-many class="com.jike.mobile.sna.model.AppUser" column="appUserId" />
+		</set>
+	</class>
+</hibernate-mapping>

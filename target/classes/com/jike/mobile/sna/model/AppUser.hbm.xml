@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.jike.mobile.sna.model.AppUser" table="app_user" catalog="sna">
+		<id name="id" type="integer">
+			<column name="id" />
+			<generator class="native"></generator>
+		</id>
+		<property name="userId" type="string">
+			<column name="userId" length="128" not-null="true" />
+		</property>
+
+		<many-to-one name="app" class="com.jike.mobile.sna.model.App" column="appId" not-null="true" />
+
+		<property name="createTime" type="long">
+			<column name="createTime" not-null="true" />
+		</property>
+
+        <set name="friends" table="app_user_friend" lazy="true">
+            <key column="userId" />
+            <many-to-many class="com.jike.mobile.sna.model.AppUser" column="friendUserId" />
+        </set>
+        
+        <set name="groups" table="app_user_group_contain" inverse="true" lazy="true">
+            <key column="appUserId" />
+            <many-to-many class="com.jike.mobile.sna.model.AppUserGroup" column="groupId" />
+        </set>
+	</class>
+</hibernate-mapping>
