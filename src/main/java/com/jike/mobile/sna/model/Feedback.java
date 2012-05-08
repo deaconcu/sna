@@ -1,51 +1,34 @@
 package com.jike.mobile.sna.model;
 
-/**
- * Feedback entity. @author MyEclipse Persistence Tools
- */
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotEmpty;
+
+import com.jike.mobile.sna.model.validate.Input;
 
 public class Feedback implements java.io.Serializable {
 
-	// Fields
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
+	
+	// Fields
+	
 	private Integer id;
+
+	@NotEmpty(groups = Input.class)
+	@Length(min = 1, max = 40, groups = Input.class)
 	private String title;
+	
+	@NotEmpty(groups = Input.class)
+	@Length(min = 1, max = 200, groups = Input.class)
 	private String content;
+	
+	@NotNull
 	private long posttime;
-	private Integer categoryid;
-	private Integer projectid;
+	
+	@Email(groups = Input.class)
 	private String email;
-
-	// Constructors
-
-	/** default constructor */
-	public Feedback() {
-	}
-
-	/** minimal constructor */
-	public Feedback(String title, String content, long posttime,
-			Integer categoryid, Integer projectid) {
-		this.title = title;
-		this.content = content;
-		this.posttime = posttime;
-		this.categoryid = categoryid;
-		this.projectid = projectid;
-	}
-
-	/** full constructor */
-	public Feedback(String title, String content, long posttime,
-			Integer categoryid, Integer projectid, String email) {
-		this.title = title;
-		this.content = content;
-		this.posttime = posttime;
-		this.categoryid = categoryid;
-		this.projectid = projectid;
-		this.email = email;
-	}
 
 	// Property accessors
 
@@ -81,22 +64,6 @@ public class Feedback implements java.io.Serializable {
 		this.posttime = posttime;
 	}
 
-	public Integer getCategoryid() {
-		return this.categoryid;
-	}
-
-	public void setCategoryid(Integer categoryid) {
-		this.categoryid = categoryid;
-	}
-
-	public Integer getProjectid() {
-		return this.projectid;
-	}
-
-	public void setProjectid(Integer projectid) {
-		this.projectid = projectid;
-	}
-
 	public String getEmail() {
 		return this.email;
 	}
@@ -105,8 +72,18 @@ public class Feedback implements java.io.Serializable {
 		this.email = email;
 	}
 	
+	@Override
 	public String toString() {
 		return "title: " + title + " content: " + content  + " email: " + email;
 	}
-
 }
+
+
+
+
+
+
+
+
+
+

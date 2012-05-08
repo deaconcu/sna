@@ -1,72 +1,35 @@
 package com.jike.mobile.sna.model;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.multipart.MultipartFile;
 
 public class UploadFile {
 	
 	Logger log = LoggerFactory.getLogger(UploadFile.class);
 	
-	File file;
-	String ContentType;
-	String filename;
-	String savePath;
-	String id;
-
-	public UploadFile() {}
+	private String id;
+	private MultipartFile file;
+	private String savePath;
 	
-	public UploadFile(File file, String contentType, String filename) {
-		this.file = file;
-		this.ContentType = contentType;
-		this.filename = filename;
-	}
-	
-	public File getFile() {
-		return file;
-	}
-	public void setFile(File file) {
-		this.file = file;
-	}
-	public String getContentType() {
-		return ContentType;
-	}
-	public void setContentType(String contentType) {
-		ContentType = contentType;
-	}
-	public String getFilename() {
-		return filename;
-	}
-	public void setFilename(String filename) {
-		this.filename = filename;
-	}	
-	public String getSavePath() {
-		return savePath;
-	}
-	public void setSavePath(String savePath) {
-		this.savePath = savePath;
-	}
-
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
+	public UploadFile(MultipartFile file) {
+		this.setFile(file);
 	}
 	
 	public void upload() throws IOException {
-		FileOutputStream fos = null;
-		FileInputStream fis = null;
+		OutputStream fos = null;
+		InputStream fis = null;
 		
 		try{
-			fos = new FileOutputStream(savePath);
-			fis = new FileInputStream(file);
+			fos = new FileOutputStream(getSavePath());
+			fis = file.getInputStream();
 			
-			log.info("uploadPath: " + savePath);
+			log.info("uploadPath: " + getSavePath());
 			
 			byte[] buffer = new byte[1024];
 			int len = 0;
@@ -87,6 +50,30 @@ public class UploadFile {
 				log.error("file not close");
 			}
 		}
+	}
+	
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public MultipartFile getFile() {
+		return file;
+	}
+
+	public void setFile(MultipartFile file) {
+		this.file = file;
+	}
+
+	public String getSavePath() {
+		return savePath;
+	}
+
+	public void setSavePath(String savePath) {
+		this.savePath = savePath;
 	}
 }
 

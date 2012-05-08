@@ -38,13 +38,11 @@ public class UserServiceImpl implements UserService{
 
 	@Override
 	public String logOut(UserLogin userLogin) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public String signIn(UserLogin userLogin) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 	

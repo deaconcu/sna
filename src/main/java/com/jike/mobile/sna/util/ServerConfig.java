@@ -1,6 +1,6 @@
 package com.jike.mobile.sna.util;
 
-import com.jike.mobile.sna.exception.ServiceException;
+import com.jike.mobile.sna.exception.InnerException;
 import com.jike.mobile.sna.service.ServerConfigService;
 
 public class ServerConfig {
@@ -10,11 +10,11 @@ public class ServerConfig {
 		ServerConfig.serverConfigService = serverConfigService;
 	}
 	
-	public static String get(String key) throws ServiceException {
+	public static String get(String key) throws InnerException {
 		return serverConfigService.get(key);
 	}
 	
-	public static Integer getInteger(String key) throws ServiceException {
+	public static Integer getInteger(String key) throws InnerException {
 		return serverConfigService.getInteger(key);
 	}
 }

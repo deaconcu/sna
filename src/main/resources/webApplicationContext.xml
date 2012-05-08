@@ -18,8 +18,51 @@
     <!-- 注解扫描 -->
 	<context:component-scan base-package="com.jike.mobile.sna.web" />
 	
+	<!-- 支持mvc注解 -->
+	<mvc:annotation-driven validator="validator"/>
+	
+	<!-- 校验器 -->
+	<bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" />
+    
 	<!-- 视图 -->
-	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver" p:prefix="/WEB-INF/views/" p:suffix=".jsp" />
+	<!--
+	<bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver" 
+	   p:order="0" p:defaultContentType="text/html" p:ignoreAcceptHeader="true" p:favorPathExtension="false" p:favorParameter="true" p:parameterName="content">
+	   <property name="mediaTypes">
+	       <map>
+	           <entry key="html" value="text/html" />
+	           <entry key="xml" value="application/xml" />
+	           <entry key="json" value="application/json" />
+	       </map>
+	   </property>
+	   <property name="defaultViews">
+	       <list>
+	           <bean id="infoAndroidView" class="org.springframework.web.servlet.view.json.MappingJacksonJsonView" 
+	               p:modelKey="infoAndroid"  p:objectMapper-ref="infoObjectMapper"/>
+	           <bean id="JsonView" class="org.springframework.web.servlet.view.json.MappingJacksonJsonView" 
+                   p:modelKey="infoAndroid"  p:objectMapper-ref="infoObjectMapper"/>
+	       </list>
+	   </property>   
+	</bean>
+
+    <bean id="infoObjectMapper" class="com.jike.mobile.sna.model.view.InfoObjectMapper" />
+
+	<bean class="org.springframework.web.servlet.view.BeanNameViewResolver"
+	   p:order="10" />
+    
+    -->
+    
+	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver" 
+	   p:order="20" p:prefix="/WEB-INF/views/" p:suffix=".jsp" />
+	
+	<!-- 国际化 -->
+	<!-- * 调试使用，每次重新加载。运行使用ResourceBundleMessageSource -->
+    <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource"
+        p:basename="classpath:messages" p:cacheSeconds="0" />
+        
+    <!-- 文件上传 -->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver"
+        p:defaultEncoding="UTF-8" p:maxUploadSize="2097152" p:uploadTempDir="resource/upload" />
 
 </beans>
 

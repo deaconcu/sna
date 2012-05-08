@@ -19,12 +19,6 @@
         <property name="posttime" type="long">
             <column name="posttime" not-null="true" />
         </property>
-        <property name="categoryid" type="integer">
-            <column name="categoryid" not-null="true" />
-        </property>
-        <property name="projectid" type="integer">
-            <column name="projectid" not-null="true" />
-        </property>
         <property name="email" type="string">
             <column name="email" length="64" />
         </property>

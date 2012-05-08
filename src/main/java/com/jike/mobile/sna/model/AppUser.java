@@ -4,13 +4,24 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotEmpty;
+
 public class AppUser implements Serializable{
 
 	private static final long serialVersionUID = -1537963861940975871L;
 	
 	private Integer id;
+	
+	@NotEmpty
+	@Length(min = 1, max = 64)
 	private String userId;
+	
+	@NotNull
 	private App app;
+	
 	private Long createTime;
 	private Set<AppUser> friends = new HashSet<AppUser>();
 	private Set<AppUserGroup> groups = new HashSet<AppUserGroup>();

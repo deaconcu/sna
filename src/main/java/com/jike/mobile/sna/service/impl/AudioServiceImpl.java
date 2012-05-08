@@ -1,27 +1,21 @@
 package com.jike.mobile.sna.service.impl;
 
-import java.io.BufferedInputStream;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
+ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.UUID;
 
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.jike.mobile.sna.dao.AudioDao;
-import com.jike.mobile.sna.exception.ServiceException;
+import com.jike.mobile.sna.exception.InnerException;
+import com.jike.mobile.sna.exception.OuterException;
 import com.jike.mobile.sna.model.Audio;
 import com.jike.mobile.sna.model.UploadFile;
 import com.jike.mobile.sna.service.AudioService;
 import com.jike.mobile.sna.service.ThriftService;
-import com.jike.mobile.sna.util.Random;
 import com.jike.mobile.sna.util.ServerConfig;
 import com.jike.mobile.sna.util.Transfer;
 
@@ -32,7 +26,7 @@ public class AudioServiceImpl implements AudioService{
 	ThriftService thriftService;
 
 	@Override
-	public void uploadWithRandomStringMd5(UploadFile uFile, String md5) throws ServiceException {	
+	public void uploadWithRandomStringMd5(UploadFile uFile, String md5) throws InnerException {	
 //		if(md5 == null) throw new ServiceException("upload.failed.md5.empty");
 //		if(!check(md5, "randomChars", "uploadCode")) throw new ServiceException("upload.failed.md5.wrong");
 //		removeRandomChars("randomChars");
@@ -41,24 +35,31 @@ public class AudioServiceImpl implements AudioService{
 	}
 
 	@Override
-	public void uploadWithFileBytesMd5(UploadFile uFile, String md5) throws ServiceException {
+	public void uploadWithFileBytesMd5(UploadFile uFile, String md5) throws InnerException, OuterException{
 		byte[] b = null;
 		try {
 			b = getBytes(uFile, 128);
 		}
 		catch (IOException e) {
-			throw new ServiceException("upload.failed.ioexception");
+			log.error("read bytes from uploadfile failed" + e.toString());
+			throw new InnerException("upload.failed.ioexception");
 		}
 		if(!check(md5, b, "uploadCode")){;
-			throw new ServiceException("upload.failed.md5.wrong");
+			throw new OuterException("error.audio.md5.wrong");
 		}
-		thriftUpload(uFile);
-		save(uFile);
+		
+		try {
+			thriftUpload(uFile);
+			save(uFile);
+		} catch(IOException e) {
+			log.error("thriftUpload failed: " + e.toString());
+			throw new InnerException();
+		}
 	}
 	
 	@Override
-	public InputStream download(String key) throws ServiceException{
-		return new ByteArrayInputStream(thriftService.read(key));
+	public byte[] download(String key) throws InnerException, OuterException{
+		return thriftService.read(key);
 	}
 
 	@Override
@@ -70,7 +71,7 @@ public class AudioServiceImpl implements AudioService{
 	}
 	
 	@SuppressWarnings("unused")
-	private void upload(UploadFile uFile) throws ServiceException {	
+	private void upload(UploadFile uFile) throws InnerException {	
 		
 //				
 //		ServletContext sc = ServletActionContext.getServletContext();
@@ -88,25 +89,25 @@ public class AudioServiceImpl implements AudioService{
 //		}
 	}
 	
-	private void thriftUpload(UploadFile uFile) throws ServiceException {
+	private void thriftUpload(UploadFile uFile) throws InnerException, IOException {
 		String fileId = UUID.randomUUID().toString();
 		uFile.setId(fileId);
-		thriftService.put(fileId, uFile.getFile());
+		thriftService.put(fileId, uFile.getFile().getInputStream());
 	}
 	
-	private void save(UploadFile uFile) throws ServiceException {
+	private void save(UploadFile uFile) throws InnerException {
 		Audio audio = new Audio(uFile.getId());
 		
 		try {
 			audioDao.save(audio);
 		} catch (RuntimeException e) {
-			throw new ServiceException("upload.failed.ioexception");
+			throw new InnerException("upload.failed.ioexception");
 		}
 	}
 
 	private byte[] getBytes(UploadFile uFile, int n) throws IOException{
 		byte[] b = new byte[n];
-		InputStream iStream = new BufferedInputStream(new FileInputStream(uFile.getFile()));
+		InputStream iStream = new BufferedInputStream(uFile.getFile().getInputStream());
 		iStream.read(b);
 		iStream.close();
 		return b;
@@ -125,7 +126,7 @@ public class AudioServiceImpl implements AudioService{
 //		}
 //	}
 //	
-	private boolean check(String md5Input, byte[] fileBytes, String codeName) throws ServiceException {
+	private boolean check(String md5Input, byte[] fileBytes, String codeName) throws InnerException {
 		byte[] codeNameBytes = null;
 		try {
 			codeNameBytes = ServerConfig.get("uploadCode").getBytes("utf-8"); 

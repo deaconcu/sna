@@ -15,12 +15,12 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	</head>
 	<body>
 	    <h1>提交feedback</h1>
-		<form action="feedback/add" method="post">
+		<form action="feedback" method="post">
 		    title: (请输入1-40个字)<br/><input type="text" name="title" size="100"> 
 		    <br/><br/>	
-			email: <br/><input type="text" name="email" size="100"> 
+			email: <br/><input type="text" name="email" size="100">
 			<br/><br/>
-			content: (请输入1-200个字)<br/><textarea name="content" cols="85" rows="12"></textarea>
+			content: (请输入1-200个字)<br/><textarea name="content" cols="102" rows="12"></textarea>
 			<br/><br/>
 			<input type="submit" value="submit"/>&nbsp;<input type="reset" value="reset"/>
 		</form>

@@ -17,7 +17,7 @@
     
 	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
 		<property name="driverClass" value="com.mysql.jdbc.Driver"></property>
-		<property name="jdbcUrl" value="jdbc:mysql://127.0.0.1:3306/browser?useUnicode=true&amp;characterEncoding=UTF8"></property>
+		<property name="jdbcUrl" value="jdbc:mysql://127.0.0.1:3306/sna?useUnicode=true&amp;characterEncoding=UTF8"></property>
 		<property name="user" value="root"></property>
 		<property name="password" value="zxcvbnm"></property>
 		<property name="minPoolSize"><value>5</value></property>
@@ -73,6 +73,20 @@
             <ref bean="feedbackDao" />
         </property>
     </bean>
+    
+    <bean id="appUserService" class="com.jike.mobile.sna.service.impl.AppUserServiceImpl">
+        <property name="appDao"><ref bean="appDao" /></property>
+        <property name="appUserDao"><ref bean="appUserDao" /></property>
+        <property name="appUserGroupDao"><ref bean="appUserGroupDao" /></property>
+    </bean>
+    
+    <bean id="audioService" class="com.jike.mobile.sna.service.impl.AudioServiceImpl">
+        <property name="audioDao"><ref bean="audioDao" /></property>
+        <property name="thriftService"><ref bean="thriftService" /></property>
+    </bean>
+    
+    <bean name="thriftService" class="com.jike.mobile.sna.service.impl.ThriftServiceImpl"></bean>
+    
 
     <!-- Dao -->
     <!-- scope="singleton" -->
@@ -81,6 +95,30 @@
     	<property name="sessionFactory">
     		<ref bean="sessionFactory" />
     	</property>
+    </bean>
+    
+    <bean id="appDao" class="com.jike.mobile.sna.dao.impl.AppDaoImpl">
+        <property name="sessionFactory">
+            <ref bean="sessionFactory" />
+        </property>
+    </bean>
+    
+    <bean id="appUserDao" class="com.jike.mobile.sna.dao.impl.AppUserDaoImpl">
+        <property name="sessionFactory">
+            <ref bean="sessionFactory" />
+        </property>
+    </bean>
+    
+    <bean id="appUserGroupDao" class="com.jike.mobile.sna.dao.impl.AppUserGroupDaoImpl">
+        <property name="sessionFactory">
+            <ref bean="sessionFactory" />
+        </property>
+    </bean>
+    
+    <bean id="audioDao" class="com.jike.mobile.sna.dao.impl.AudioDaoImpl">
+        <property name="sessionFactory">
+            <ref bean="sessionFactory" />
+        </property>
     </bean>
     
     <!-- aop -->
@@ -109,7 +147,6 @@
            
     </aop:config>
 
-    
     
 </beans>
 

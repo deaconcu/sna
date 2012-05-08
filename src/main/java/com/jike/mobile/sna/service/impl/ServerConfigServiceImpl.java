@@ -7,7 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
 
-import com.jike.mobile.sna.exception.ServiceException;
+import com.jike.mobile.sna.exception.InnerException;
 import com.jike.mobile.sna.service.ServerConfigService;
 
 public class ServerConfigServiceImpl implements ServerConfigService {
@@ -15,7 +15,7 @@ public class ServerConfigServiceImpl implements ServerConfigService {
 	
 	private Properties properties;
 	
-	public ServerConfigServiceImpl(String serverConfigLocation) throws ServiceException {
+	public ServerConfigServiceImpl(String serverConfigLocation) throws InnerException {
 		try {
 			InputStream in = (new ClassPathResource(serverConfigLocation)).getInputStream();
 			properties = new Properties();
@@ -23,27 +23,27 @@ public class ServerConfigServiceImpl implements ServerConfigService {
 			log.info("ServerConfig load Success");
 		} catch (Exception e) {
 			log.error("ServerConfig load Error" + e.toString());
-			throw new ServiceException("system.internal.error");
+			throw new InnerException("system.internal.error");
 		}
 	}
 	
 	@Override
-	public String get(String key) throws ServiceException {
+	public String get(String key) throws InnerException {
 		String value = properties.getProperty(key);
 		if(value == null) {
 			log.error("can't get serverConfig value: " + key);
-			throw new ServiceException("system.internal.error");
+			throw new InnerException("system.internal.error");
 		}
 		return value;
 	}
 	
 	@Override
-	public Integer getInteger(String key) throws ServiceException {
+	public Integer getInteger(String key) throws InnerException {
 		try {
 			return Integer.parseInt(get(key));
 		} catch (NumberFormatException e) {
 			log.error(key + " is not a number!");
-			throw new ServiceException("system.internal.error");
+			throw new InnerException("system.internal.error");
 		}
 	}
 
